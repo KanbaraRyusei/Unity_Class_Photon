@@ -37,7 +37,7 @@ namespace RingCrisis
             var targetScene = EditorBuildSettings.scenes.First(scene => Path.GetFileNameWithoutExtension(scene.path) == sceneName);
             var buildTarget = EditorUserBuildSettings.activeBuildTarget;
             var locationPath = Path.Combine(outputDirectory, MakeApplicationFileName(appName, buildTarget));
-            var buildOptions = BuildOptions.SymlinkLibraries | BuildOptions.AutoRunPlayer;
+            var buildOptions = BuildOptions.SymlinkSources | BuildOptions.AutoRunPlayer;
 
             var originalName = PlayerSettings.productName;
             PlayerSettings.productName = appName;
