@@ -21,6 +21,9 @@ namespace RingCrisis
         [SerializeField]
         private GameObject _fxSpawn = null;
 
+        [SerializeField]
+        private float _randomSpawnPosition = 0f;
+
         private bool _activated;
 
         private float _timer;
@@ -29,7 +32,8 @@ namespace RingCrisis
         {
             _activated = true;
 
-            SpawnTarget();
+            SpawnTarget(new Vector3(Random.Range(-_randomSpawnPosition, _randomSpawnPosition),
+                0, Random.Range(-_randomSpawnPosition, _randomSpawnPosition)));
         }
 
         public void DeactivateSpawn()
@@ -42,11 +46,13 @@ namespace RingCrisis
             Assert.IsNotNull(_rpcManager);
             Assert.IsNotNull(_targetPrefab);
             Assert.IsNotNull(_fxSpawn);
+
+            _rpcManager.OnTargetSpawn += SpawnTarget;
         }
 
         private void Update()
         {
-            if (!_activated)
+            if (!_activated || !PhotonNetwork.IsMasterClient)
             {
                 return;
             }
@@ -56,13 +62,14 @@ namespace RingCrisis
             if (_timer > SpawnInterval)
             {
                 _timer -= SpawnInterval;
+                _rpcManager.SendTargetSpawn(new Vector3(Random.Range(-_randomSpawnPosition, _randomSpawnPosition),
+                0, Random.Range(-_randomSpawnPosition, _randomSpawnPosition)));
             }
         }
 
-        private void SpawnTarget()
+        private void SpawnTarget(Vector3 position)
         {
-            // FIXME!!!
-            SpawnTargetLocal(new Vector3(0, 0, 0));
+            SpawnTargetLocal(position);
         }
 
         private void SpawnTargetLocal(Vector3 worldPosition)

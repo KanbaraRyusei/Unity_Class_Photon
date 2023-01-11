@@ -156,6 +156,7 @@ MonoBehaviour:
   _targetPrefab: {fileID: 7513093589191693526, guid: 779599613cbf242679f0d055d843b9e2,
     type: 3}
   _fxSpawn: {fileID: 658467085575197047, guid: e657a8ee911acd74baba83790ca675d2, type: 3}
+  _randomSpawnPosition: 5
 --- !u!4 &17827822
 Transform:
   m_ObjectHideFlags: 0

@@ -81,22 +81,16 @@ namespace RingCrisis
 
             _dragController.OnEndDrag += delta =>
             {
-                var velocityXZ = -delta; // ひっぱりと反対方向
-
-                _shootingPosition = velocityXZ;
+                var velocityXZ = -delta;
 
                 // リングを発射
-                //ShootRing(_teamColor, velocityXZ); // <--- FIXME!!!
-                _rpcManager.SendShootRing();
+                _rpcManager.SendShootRing(_teamColor, velocityXZ);
 
                 // 軌道ガイドを非表示に
                 _curveObjectTransform.gameObject.SetActive(false);
             };
 
-            _rpcManager.OnShootRing += () =>
-            {
-                ShootRing(_teamColor, _shootingPosition);
-            };
+            _rpcManager.OnShootRing += ShootRing;
         }
 
         /// <summary>

@@ -13,7 +13,9 @@ namespace RingCrisis
     {
         public event Action OnReceiveStartGame;
 
-        public event Action OnShootRing;
+        public event Action<TeamColor, Vector3> OnShootRing;
+
+        public event Action<Vector3> OnTargetSpawn;
 
         private PhotonView _photonView;
 
@@ -24,9 +26,14 @@ namespace RingCrisis
             _photonView.RPC(nameof(StartGame), RpcTarget.AllViaServer);
         }
 
-        public void SendShootRing()
+        public void SendShootRing(TeamColor color, Vector3 dir)
         {
-            _photonView.RPC(nameof(ShootRing), RpcTarget.AllViaServer);
+            _photonView.RPC(nameof(ShootRing), RpcTarget.AllViaServer, color, dir);
+        }
+
+        public void SendTargetSpawn(Vector3 position)
+        {
+            _photonView.RPC(nameof(TargetSpawn), RpcTarget.AllViaServer, position);
         }
 
         private void Awake()
@@ -41,9 +48,15 @@ namespace RingCrisis
         }
 
         [PunRPC]
-        private void ShootRing()
+        private void ShootRing(TeamColor color, Vector3 dir)
         {
-            OnShootRing?.Invoke();
+            OnShootRing?.Invoke(color, dir);
+        }
+
+        [PunRPC]
+        private void TargetSpawn(Vector3 vector3)
+        {
+            OnTargetSpawn?.Invoke(vector3);
         }
     }
 }
