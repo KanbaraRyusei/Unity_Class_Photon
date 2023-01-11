@@ -39,6 +39,8 @@ namespace RingCrisis
 
         private TeamColor _teamColor;
 
+        private Vector3 _shootingPosition;
+
         public void Initialize(TeamColor teamColor)
         {
             _teamColor = teamColor;
@@ -81,11 +83,19 @@ namespace RingCrisis
             {
                 var velocityXZ = -delta; // ひっぱりと反対方向
 
+                _shootingPosition = velocityXZ;
+
                 // リングを発射
-                ShootRing(_teamColor, velocityXZ); // <--- FIXME!!!
+                //ShootRing(_teamColor, velocityXZ); // <--- FIXME!!!
+                _rpcManager.SendShootRing();
 
                 // 軌道ガイドを非表示に
                 _curveObjectTransform.gameObject.SetActive(false);
+            };
+
+            _rpcManager.OnShootRing += () =>
+            {
+                ShootRing(_teamColor, _shootingPosition);
             };
         }
 

@@ -55,6 +55,9 @@ namespace PhotonTutorial
         [SerializeField]
         private Button _sendRpcButton = null;
 
+        [SerializeField]
+        private Transform _markerPos = null;
+
         private List<TMP_Text> _logLines;
 
         // Photonネットワーク越しにRPCのやり取りをするために必要なコンポーネント
@@ -75,6 +78,7 @@ namespace PhotonTutorial
             Assert.IsNotNull(_createRoomButton);
             Assert.IsNotNull(_joinRoomButton);
             Assert.IsNotNull(_sendRpcButton);
+            Assert.IsNotNull(_markerPos);
 
             // 各種ボタンをクリックしたときのイベントを登録
             _connectButton.onClick.AddListener(Connect);
@@ -90,6 +94,20 @@ namespace PhotonTutorial
             _photonView = GetComponent<PhotonView>();
         }
 
+        private void Update()
+        {
+            if(PhotonNetwork.InRoom && Input.GetMouseButton(0))
+            {
+                _photonView.RPC("SendMousePositionRPC", RpcTarget.AllViaServer, PhotonNetwork.NickName, Input.mousePosition);
+            }
+        }
+
+        [PunRPC]
+        private void SendMousePositionRPC(string sender, Vector3 pos)
+        {
+            //AppendLog($"{sender} > {pos}");
+            _markerPos.position = pos;
+        }
 
         // =======================================
         // ボタンクリック時のイベント実装
